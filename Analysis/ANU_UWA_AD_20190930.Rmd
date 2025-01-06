@@ -1,0 +1,417 @@
+---
+title: "Photomorphogenesis_ATG"
+author: "Akila & Diep"
+date: "29/09/2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Autophagy Deetiolation RNASeq Analysis
+# PEB Internode Colloboration Grant
+# Diep & Akila
+
+```{r}
+# Load Packages 
+
+library(ThreeDRNAseq)
+library(limma)
+library(edgeR)
+library(tximport)
+library(tidyverse)
+library(tximport)
+library(RUVSeq)
+library(eulerr)
+library(gridExtra)
+library(grid)
+library(ComplexHeatmap)
+library(ggrepel)
+```
+
+
+## arrange sample information
+```{r}
+metadata <- tibble(samples = dir("tsv_files"),
+            condition = sapply(strsplit(samples, "_"), function(l) l[1]))
+
+metadata <- tibble(samples = dir("tsv_files"),
+            label = str_sub(metadata$samples, end = -5),
+            genotype = sapply(strsplit(samples, "_"), function(l) l[1]),
+            time = sapply(strsplit(samples, "_"), function(l) l[2]),
+            treat = paste0(genotype,'_',time))
+
+
+files <- file.path("tsv_files", metadata$samples)
+
+names(files) <- metadata$samples
+
+all(file.exists(files))
+```
+## annotation function
+```{r}
+getAttributeField <- function (x, field, attrsep = ";") {
+                      s = strsplit(x, split = attrsep, fixed = TRUE)
+                      sapply(s, function(atts) {
+                        a = strsplit(atts, split = "=", fixed = TRUE)
+                        m = match(field, sapply(a, "[", 1))
+                        if (!is.na(m)) {
+                          rv = a[[m]][2]
+                        }
+                        else {
+                          rv = as.character(NA)
+                        }
+                        return(rv)
+                      })
+                    }
+```
+
+## gene info
+```{r}
+athal_gene <- read_delim("E:/RNASeq_Project/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3",skip=13,delim='\t',col_names = F) %>%
+              subset(X3 == "gene") %>%
+              mutate(name = getAttributeField(X9, "Name")) %>%
+              mutate(gene = getAttributeField(X9, "ID")) %>%
+              mutate(gene = sapply(strsplit(gene,":"), function(l) l[2])) %>%
+              mutate(description = getAttributeField(X9, "description")) %>%
+              mutate(description = sapply(strsplit(description, " \\["), function(l) l[1])) %>%
+              select(name, gene, description)
+
+## transcript mapping info / This was called mapping (mapping.csv) in 3DRNASeq
+tx2gene <- read_delim("E:/RNASeq_Project/Kallisto_OP/Analysis/AtRTD2_19April2016.gtf", delim='\t', col_names = F) %>%
+            mutate(TXNAME = sapply(strsplit(X9, '"'), function(l) l[2])) %>%
+            mutate(GENEID = sapply(strsplit(X9, '"'), function(l) l[4])) %>%
+            select(TXNAME,GENEID) %>%  unique
+```
+## generate gene expression
+```{r}
+txi_gene <- tximport(files, tx2gene = tx2gene, "kallisto", countsFromAbundance = "lengthScaledTPM")
+```
+## generate transcript level counts
+```{r}
+txi_trans <- tximport(files, tx2gene = tx2gene, "kallisto", txOut = T, countsFromAbundance = "dtuScaledTPM")
+```
+################################################################################
+##extract gene and transcript read counts
+
+## take genes_counts through data pre-processing
+```{r}
+genes_counts <- txi_gene$counts
+tx_counts <- txi_trans$counts
+
+trans_TPM <- txi_trans$abundance
+```
+
+# Data Visualization 
+# https://github.com/wyguo/ThreeDRNAseq/blob/master/vignettes/user_manuals/3D_RNA-seq_command_line_user_manual.md#de-das-and-dtu-analysis
+
+
+# Step 2: Filter low expression genes
+
+################################################################################
+##----->> Do the filters
+```{r}
+target_high <- low.expression.filter(abundance = tx_counts, 
+                                     mapping = tx2gene,
+                                     abundance.cut = 1,
+                                     sample.n = 3,
+                                     unit = 'counts',
+                                     Log=F)
+```
+####################################################
+############ Mean-variance plot ####################
+####################################################
+
+## ----->> gene level
+```{r}
+counts.raw = genes_counts[rowSums(genes_counts>0)>0,]
+
+counts.filtered = genes_counts[target_high$genes_high,]
+
+mv.genes <- check.mean.variance(counts.raw = counts.raw,
+                                counts.filtered = counts.filtered,
+                                condition = metadata$treat)
+```
+### make plot
+```{r}
+fit.raw <- mv.genes$fit.raw
+fit.filtered <- mv.genes$fit.filtered
+mv.genes.plot <- function(){
+  par(mfrow=c(1,2))
+  plotMeanVariance(x = fit.raw$sx,y = fit.raw$sy,
+                   l = fit.raw$l,lwd=2,fit.line.col ='gold',col='black')
+  title('\n\nRaw counts (gene level)')
+  plotMeanVariance(x = fit.filtered$sx,y = fit.filtered$sy,
+                   l = fit.filtered$l,lwd=2,col='black')
+  title('\n\nFiltered counts (gene level)')
+  lines(fit.raw$l, col = "gold",lty=4,lwd=2)
+  legend('topright',col = c('red','gold'),lty=c(1,4),lwd=3,
+         legend = c('low-exp removed','low-exp kept'))
+}
+mv.genes.plot()
+```
+<!-- ### save to figures -->
+<!-- png(filename = paste0('Gene mean-variance trend.png'), -->
+<!--     width = 25/2.54,height = 12/2.54,units = 'in',res = 300) -->
+<!-- mv.genes.plot() -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Gene mean-variance trend.pdf'), -->
+<!--     width = 25/2.54,height = 12/2.54) -->
+<!-- mv.genes.plot() -->
+<!-- dev.off() -->
+
+###############################################################
+########## Principal component analysis (PCA) ################
+##############################################################
+
+############################
+##----->> genes level
+```{r}
+data2pca <- genes_counts[target_high$genes_high,]
+dge <- DGEList(counts=data2pca) 
+dge <- calcNormFactors(dge)
+data2pca <- t(counts2CPM(obj = dge,Log = T))
+dim1 <- 'PC1'
+dim2 <- 'PC2'
+ellipse.type <- 'polygon' #ellipse.type=c('none','ellipse','polygon')
+
+##--All Bio-reps plots
+
+groups <- metadata$treat ## colour on biological replicates
+#groups <- metadata$label ## colour on condtions
+g <- plotPCAind(data2pca = data2pca, dim1 = dim1, dim2 = dim2,
+                groups = groups, plot.title = 'genescript PCA: bio-reps',
+                ellipse.type = ellipse.type,
+                add.label = F, adj.label = F)
+
+g
+```
+<!-- ### save to figure -->
+<!-- png(filename = paste0('Gene PCA Bio-reps1.png'), -->
+<!--     width = 15/2.54,height = 13/2.54,units = 'in',res = 300) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Gene PCA Bio-reps1.pdf'), -->
+<!--     width = 15/2.54,height = 13/2.54) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+##################################################
+##--average Gene expression plot 
+```{r}
+rownames(data2pca) <- gsub('_','.',rownames(data2pca))
+groups <- metadata$label ## colour on biological replicates
+data2pca.ave <- rowmean(data2pca,metadata$treat,reorder = F)
+groups <- unique(metadata$treat)
+g <- plotPCAind(data2pca = data2pca.ave,dim1 = 'PC1',dim2 = 'PC2',
+                groups = groups,plot.title = 'genescript PCA: average gene expression',
+                ellipse.type = 'none',add.label = T,adj.label = F)
+
+g
+```
+<!-- ### save to figure -->
+<!-- png(filename = paste0('Gene PCA average gene expression.png'), -->
+<!--     width = 15/2.54,height = 13/2.54,units = 'in',res = 300) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Gene PCA average gene expression.pdf'), -->
+<!--     width = 15/2.54,height = 13/2.54) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+
+#########################
+##----->> trans level
+```{r}
+data2pca <- tx_counts[target_high$trans_high,]
+dge <- DGEList(counts=data2pca) 
+dge <- calcNormFactors(dge)
+data2pca <- t(counts2CPM(obj = dge,Log = T))
+dim1 <- 'PC1'
+dim2 <- 'PC2'
+ellipse.type <- 'polygon' #ellipse.type=c('none','ellipse','polygon')
+
+##--All Bio-reps plots
+groups <- metadata$treat ## colour on biological replicates
+#groups <- metadata$label ## colour on condtions
+g <- plotPCAind(data2pca = data2pca,dim1 = dim1,dim2 = dim2,
+                groups = groups,plot.title = 'Transcript PCA: bio-reps',
+                ellipse.type = ellipse.type,
+                add.label = T,adj.label = F)
+
+g
+```
+<!-- ### save to figure -->
+<!-- png(filename = paste0('Transcript PCA Bio-reps.png'), -->
+<!--     width = 15/2.54,height = 13/2.54,units = 'in',res = 300) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Transcript PCA Bio-reps.pdf'), -->
+<!--     width = 15/2.54,height = 13/2.54) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+##################################################
+##--average transcript expression plot
+```{r}
+groups <- metadata$label
+data2pca.ave <- rowmean(data2pca,metadata$treat,reorder = F)
+groups <- unique(metadata$treat)
+g <- plotPCAind(data2pca = data2pca.ave,dim1 = 'PC1',dim2 = 'PC2',
+                groups = groups,plot.title = 'Transcript PCA: average expression',
+                ellipse.type = 'none',add.label = T,adj.label = F)
+
+g
+```
+### save to figure
+<!-- png(filename = paste0('Transcript PCA average expression.png'), -->
+<!--     width = 15/2.54,height = 13/2.54,units = 'in',res = 300) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Transcript PCA average expression.pdf'), -->
+<!--     width = 15/2.54,height = 13/2.54) -->
+<!-- print(g) -->
+<!-- dev.off() -->
+
+
+
+
+
+
+########################################################
+################## Data normalization #################
+#######################################################
+
+### data normalisation parameter
+```{r}
+norm_method <- 'TMM' ## norm_method is one of 'TMM','RLE' and 'upperquartile'
+```
+################################################################################
+##----->> genes level
+```{r}
+dge <- DGEList(counts=genes_counts[target_high$genes_high,],
+               group = metadata$label)
+genes_dge <- suppressWarnings(calcNormFactors(dge,method = norm_method))
+save(genes_dge,file=paste0('genes_dge.RData'))
+```
+################################################################################
+##----->> MDS plot
+```{r}
+group <-  metadata$label
+
+y <- calcNormFactors(dge)
+design <- model.matrix(~group)
+y <- estimateDisp(y, design)
+par(mfrow=c(1,1))
+
+plotMDS(y, labels=NULL, pch= 19, cex=3, cex.axis=2.2, cex.lab= 2.2, cex.main=3, col= c(rep("black", 3), rep("bisque3", 3), rep("bisque4", 2), rep("#99CCFF", 3), rep("#3399FF", 3), rep("#0066CC", 3), rep("#CCCC00", 3), rep("#999900", 3), rep("#666600", 3), rep("#CC66FF", 3), rep("#9900CC", 3), rep("#660066", 3),rep("#118833", 3),rep("#118855", 3),rep("#118899", 3)), main= "Multidimentional scaling plot")
+
+text <- c('atg2_0h', 'atg2_12h', 'atg2_24h', 'atg5_0h', 'atg5_12h', 'atg5_24h', 'atg7_0h', 'atg7_12h', 'atg7_24h', 'atg9_0h', 'atg9_12h', 'atg9_24h', 'WT_0h', 'WT_12h', 'WT_24h')
+plot.new()
+par(xpd=TRUE)
+plot_colors <- c("black","bisque3", "bisque4", "#99CCFF", "#3399FF", "#0066CC", "#CCCC00", "#999900", "#666600", "#CC66FF", "#9900CC", "#660066", "#118833", "#118855", "#118899")
+legend("center",legend = text,
+       col=plot_colors, cex=2, y.intersp = 0.35, horiz = FALSE, pch=19, bty="n")
+
+```
+################################################################################
+##----->> distribution plot
+```{r}
+sample.name <- paste0(metadata$label,'.',metadata$treat)
+condition <- metadata$label
+
+```
+###--- genes level
+```{r}
+data.before <- genes_counts[target_high$genes_high,]
+data.after <- counts2CPM(obj = genes_dge,Log = T)
+g <- boxplotNormalised(data.before = data.before,
+                       data.after = data.after,
+                       condition = condition,
+                       sample.name = sample.name)
+do.call(grid.arrange,g)
+```
+<!-- ### save to figure -->
+<!-- png(filename = paste0('Gene expression distribution.png'), -->
+<!--     width = 20/2.54,height = 20/2.54,units = 'in',res = 300) -->
+<!-- do.call(grid.arrange,g) -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Gene expression distribution.pdf'), -->
+<!--     width = 20/2.54,height = 20/2.54) -->
+<!-- do.call(grid.arrange,g) -->
+<!-- dev.off() -->
+
+
+
+
+################################################################################
+##----->> trans level
+```{r}
+dge <- DGEList(counts=tx_counts[target_high$trans_high,],
+               group = metadata$label,
+               genes = tx2gene[target_high$trans_high,])
+trans_dge <- suppressWarnings(calcNormFactors(dge,method = norm_method))
+save(trans_dge,file=paste0('trans_dge.RData'))
+
+
+################################################################################
+##----->> distribution plot
+sample.name <- paste0(metadata$label,'.',metadata$treat)
+condition <- metadata$label
+
+###--- trans level
+data.before <- tx_counts[target_high$trans_high,]
+data.after <- counts2CPM(obj = trans_dge,Log = T)
+g <- boxplotNormalised(data.before = data.before,
+                       data.after = data.after,
+                       condition = condition,
+                       sample.name = sample.name)
+do.call(grid.arrange,g)
+```
+<!-- ### save to figure -->
+<!-- png(filename = paste0('Transcript expression distribution.png'), -->
+<!--     width = 20/2.54,height = 20/2.54,units = 'in',res = 300) -->
+<!-- do.call(grid.arrange,g) -->
+<!-- dev.off() -->
+
+<!-- pdf(file = paste0('Transcript expression distribution.pdf'), -->
+<!--     width = 20/2.54,height = 20/2.54) -->
+<!-- do.call(grid.arrange,g) -->
+<!-- dev.off() -->
+
+<!-- ########################################## -->
+<!-- ############ Data information ########### -->
+<!-- ######################################### -->
+
+<!-- RNAseq_info <- data.frame( -->
+<!--   Description=c('Raw transcripts', -->
+<!--                 'Raw genes', -->
+<!--                 'Samples', -->
+<!--                 'Samples after merging seq-reps', -->
+<!--                 'Condition of interest', -->
+<!--                 'CPM cut-off', -->
+<!--                 'Min samples to CPM cut-off', -->
+<!--                 'Expressed transcripts', -->
+<!--                 'Expressed genes'), -->
+<!--   Number=c(length(mapping$TXNAME), -->
+<!--            length(unique(mapping$GENEID)), -->
+<!--            nrow(metatable), -->
+<!--            nrow(metatable_new), -->
+<!--            length(unique(metatable$label)), -->
+<!--            cpm_cut, -->
+<!--            cpm_samples_n, -->
+<!--            length(target_high$trans_high), -->
+<!--            length(target_high$genes_high)) -->
+<!-- ) -->
+<!-- DDD.data$RNAseq_info <- RNAseq_info -->
+
+<!-- RNAseq_info -->

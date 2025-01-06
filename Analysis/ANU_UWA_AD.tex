@@ -1,0 +1,981 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Photomorphogenesis\_ATG},
+            pdfauthor={Akila \& Diep},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Photomorphogenesis\_ATG}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Akila \& Diep}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{29/09/2019}
+
+
+\begin{document}
+\maketitle
+
+\hypertarget{autophagy-deetiolation-rnaseq-analysis}{%
+\section{Autophagy Deetiolation RNASeq
+Analysis}\label{autophagy-deetiolation-rnaseq-analysis}}
+
+\hypertarget{peb-internode-colloboration-grant}{%
+\section{PEB Internode Colloboration
+Grant}\label{peb-internode-colloboration-grant}}
+
+\hypertarget{diep-akila}{%
+\section{Diep \& Akila}\label{diep-akila}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load Packages }
+
+\KeywordTok{library}\NormalTok{(ThreeDRNAseq)}
+\KeywordTok{library}\NormalTok{(limma)}
+\KeywordTok{library}\NormalTok{(edgeR)}
+\KeywordTok{library}\NormalTok{(tximport)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages ------------------------------------------------------------------ tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.2.0     v purrr   0.3.2
+## v tibble  2.1.3     v dplyr   0.8.3
+## v tidyr   0.8.3     v stringr 1.4.0
+## v readr   1.3.1     v forcats 0.4.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts --------------------------------------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tximport)}
+\KeywordTok{library}\NormalTok{(RUVSeq)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: Biobase
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: BiocGenerics
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: parallel
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'BiocGenerics'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:parallel':
+## 
+##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+##     clusterExport, clusterMap, parApply, parCapply, parLapply,
+##     parLapplyLB, parRapply, parSapply, parSapplyLB
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     combine, intersect, setdiff, union
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:limma':
+## 
+##     plotMA
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     IQR, mad, sd, var, xtabs
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     anyDuplicated, append, as.data.frame, basename, cbind,
+##     colnames, dirname, do.call, duplicated, eval, evalq, Filter,
+##     Find, get, grep, grepl, intersect, is.unsorted, lapply, Map,
+##     mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+##     pmin.int, Position, rank, rbind, Reduce, rownames, sapply,
+##     setdiff, sort, table, tapply, union, unique, unsplit, which,
+##     which.max, which.min
+\end{verbatim}
+
+\begin{verbatim}
+## Welcome to Bioconductor
+## 
+##     Vignettes contain introductory material; view with
+##     'browseVignettes()'. To cite Bioconductor, see
+##     'citation("Biobase")', and for packages 'citation("pkgname")'.
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: EDASeq
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: ShortRead
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: BiocParallel
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Biostrings
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: S4Vectors
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: stats4
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'S4Vectors'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     first, rename
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tidyr':
+## 
+##     expand
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     expand.grid
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: IRanges
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'IRanges'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     collapse, desc, slice
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     reduce
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:grDevices':
+## 
+##     windows
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: XVector
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'XVector'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     compact
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'Biostrings'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     strsplit
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Rsamtools
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: GenomeInfoDb
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: GenomicRanges
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: GenomicAlignments
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: SummarizedExperiment
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: DelayedArray
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: matrixStats
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'matrixStats'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:Biobase':
+## 
+##     anyMissing, rowMedians
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     count
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'DelayedArray'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:matrixStats':
+## 
+##     colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:Biostrings':
+## 
+##     type
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     simplify
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     aperm, apply, rowsum
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'GenomicAlignments'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     last
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'ShortRead'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     id
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     compose
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tibble':
+## 
+##     view
+\end{verbatim}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'R.oo':
+##   method        from       
+##   throw.default R.methodsS3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(eulerr)}
+\KeywordTok{library}\NormalTok{(gridExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'gridExtra'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:Biobase':
+## 
+##     combine
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:BiocGenerics':
+## 
+##     combine
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(grid)}
+\KeywordTok{library}\NormalTok{(ComplexHeatmap)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ========================================
+## ComplexHeatmap version 2.0.0
+## Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/
+## Github page: https://github.com/jokergoo/ComplexHeatmap
+## Documentation: http://jokergoo.github.io/ComplexHeatmap-reference
+## 
+## If you use it in published research, please cite:
+## Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
+##   genomic data. Bioinformatics 2016.
+## ========================================
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggrepel)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{arrange-sample-information}{%
+\subsection{arrange sample
+information}\label{arrange-sample-information}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metadata <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}\DataTypeTok{samples =} \KeywordTok{dir}\NormalTok{(}\StringTok{"tsv_files"}\NormalTok{),}
+            \DataTypeTok{condition =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(samples, }\StringTok{"_"}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{1}\NormalTok{]))}
+
+\NormalTok{metadata <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}\DataTypeTok{samples =} \KeywordTok{dir}\NormalTok{(}\StringTok{"tsv_files"}\NormalTok{),}
+            \DataTypeTok{label =} \KeywordTok{str_sub}\NormalTok{(metadata}\OperatorTok{$}\NormalTok{samples, }\DataTypeTok{end =} \DecValTok{-5}\NormalTok{),}
+            \DataTypeTok{genotype =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(samples, }\StringTok{"_"}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{1}\NormalTok{]),}
+            \DataTypeTok{time =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(samples, }\StringTok{"_"}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{2}\NormalTok{]),}
+            \DataTypeTok{treat =} \KeywordTok{paste0}\NormalTok{(genotype,}\StringTok{'_'}\NormalTok{,time))}
+
+
+\NormalTok{files <-}\StringTok{ }\KeywordTok{file.path}\NormalTok{(}\StringTok{"tsv_files"}\NormalTok{, metadata}\OperatorTok{$}\NormalTok{samples)}
+
+\KeywordTok{names}\NormalTok{(files) <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{samples}
+
+\KeywordTok{all}\NormalTok{(}\KeywordTok{file.exists}\NormalTok{(files))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\hypertarget{annotation-function}{%
+\subsection{annotation function}\label{annotation-function}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{getAttributeField <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{ (x, field, }\DataTypeTok{attrsep =} \StringTok{";"}\NormalTok{) \{}
+\NormalTok{                      s =}\StringTok{ }\KeywordTok{strsplit}\NormalTok{(x, }\DataTypeTok{split =}\NormalTok{ attrsep, }\DataTypeTok{fixed =} \OtherTok{TRUE}\NormalTok{)}
+                      \KeywordTok{sapply}\NormalTok{(s, }\ControlFlowTok{function}\NormalTok{(atts) \{}
+\NormalTok{                        a =}\StringTok{ }\KeywordTok{strsplit}\NormalTok{(atts, }\DataTypeTok{split =} \StringTok{"="}\NormalTok{, }\DataTypeTok{fixed =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{                        m =}\StringTok{ }\KeywordTok{match}\NormalTok{(field, }\KeywordTok{sapply}\NormalTok{(a, }\StringTok{"["}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+                        \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(m)) \{}
+\NormalTok{                          rv =}\StringTok{ }\NormalTok{a[[m]][}\DecValTok{2}\NormalTok{]}
+\NormalTok{                        \}}
+                        \ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{                          rv =}\StringTok{ }\KeywordTok{as.character}\NormalTok{(}\OtherTok{NA}\NormalTok{)}
+\NormalTok{                        \}}
+                        \KeywordTok{return}\NormalTok{(rv)}
+\NormalTok{                      \})}
+\NormalTok{                    \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{gene-info}{%
+\subsection{gene info}\label{gene-info}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{athal_gene <-}\StringTok{ }\KeywordTok{read_delim}\NormalTok{(}\StringTok{"C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3"}\NormalTok{,}\DataTypeTok{skip=}\DecValTok{13}\NormalTok{,}\DataTypeTok{delim=}\StringTok{'}\CharTok{\textbackslash{}t}\StringTok{'}\NormalTok{,}\DataTypeTok{col_names =}\NormalTok{ F) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{subset}\NormalTok{(X3 }\OperatorTok{==}\StringTok{ "gene"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{name =} \KeywordTok{getAttributeField}\NormalTok{(X9, }\StringTok{"Name"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{gene =} \KeywordTok{getAttributeField}\NormalTok{(X9, }\StringTok{"ID"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{gene =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(gene,}\StringTok{":"}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{2}\NormalTok{])) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{description =} \KeywordTok{getAttributeField}\NormalTok{(X9, }\StringTok{"description"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{description =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(description, }\StringTok{" }\CharTok{\textbackslash{}\textbackslash{}}\StringTok{["}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{1}\NormalTok{])) }\OperatorTok{%>%}
+\StringTok{              }\KeywordTok{select}\NormalTok{(name, gene, description)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   X1 = col_character(),
+##   X2 = col_character(),
+##   X3 = col_character(),
+##   X4 = col_double(),
+##   X5 = col_double(),
+##   X6 = col_character(),
+##   X7 = col_character(),
+##   X8 = col_character(),
+##   X9 = col_character()
+## )
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: 32840 parsing failures.
+## row col  expected    actual                                                                                                    file
+##   2  -- 9 columns 1 columns 'C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3'
+##  19  -- 9 columns 1 columns 'C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3'
+## 135  -- 9 columns 1 columns 'C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3'
+## 139  -- 9 columns 1 columns 'C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3'
+## 157  -- 9 columns 1 columns 'C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/Arabidopsis_thaliana.TAIR10.44.gff3'
+## ... ... ......... ......... .......................................................................................................
+## See problems(...) for more details.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## transcript mapping info / This was called mapping (mapping.csv) in 3DRNASeq}
+\NormalTok{tx2gene <-}\StringTok{ }\KeywordTok{read_delim}\NormalTok{(}\StringTok{"C:/Users/akila/OneDrive/Documents/R_Projects/Kallisto_OP/Analysis/AtRTD2_19April2016.gtf"}\NormalTok{, }\DataTypeTok{delim=}\StringTok{'}\CharTok{\textbackslash{}t}\StringTok{'}\NormalTok{, }\DataTypeTok{col_names =}\NormalTok{ F) }\OperatorTok{%>%}
+\StringTok{            }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{TXNAME =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(X9, }\StringTok{'"'}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{2}\NormalTok{])) }\OperatorTok{%>%}
+\StringTok{            }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{GENEID =} \KeywordTok{sapply}\NormalTok{(}\KeywordTok{strsplit}\NormalTok{(X9, }\StringTok{'"'}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(l) l[}\DecValTok{4}\NormalTok{])) }\OperatorTok{%>%}
+\StringTok{            }\KeywordTok{select}\NormalTok{(TXNAME,GENEID) }\OperatorTok{%>%}\StringTok{  }\NormalTok{unique}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Parsed with column specification:
+## cols(
+##   X1 = col_character(),
+##   X2 = col_character(),
+##   X3 = col_character(),
+##   X4 = col_double(),
+##   X5 = col_double(),
+##   X6 = col_character(),
+##   X7 = col_character(),
+##   X8 = col_character(),
+##   X9 = col_character()
+## )
+\end{verbatim}
+
+\hypertarget{generate-gene-expression}{%
+\subsection{generate gene expression}\label{generate-gene-expression}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{txi_gene <-}\StringTok{ }\KeywordTok{tximport}\NormalTok{(files, }\DataTypeTok{tx2gene =}\NormalTok{ tx2gene, }\StringTok{"kallisto"}\NormalTok{, }\DataTypeTok{countsFromAbundance =} \StringTok{"lengthScaledTPM"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Note: importing `abundance.h5` is typically faster than `abundance.tsv`
+\end{verbatim}
+
+\begin{verbatim}
+## reading in files with read_tsv
+\end{verbatim}
+
+\begin{verbatim}
+## 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 
+## summarizing abundance
+## summarizing counts
+## summarizing length
+\end{verbatim}
+
+\hypertarget{generate-transcript-level-counts}{%
+\subsection{generate transcript level
+counts}\label{generate-transcript-level-counts}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{txi_trans <-}\StringTok{ }\KeywordTok{tximport}\NormalTok{(files, }\DataTypeTok{tx2gene =}\NormalTok{ tx2gene, }\StringTok{"kallisto"}\NormalTok{, }\DataTypeTok{txOut =}\NormalTok{ T, }\DataTypeTok{countsFromAbundance =} \StringTok{"dtuScaledTPM"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Note: importing `abundance.h5` is typically faster than `abundance.tsv`
+\end{verbatim}
+
+\begin{verbatim}
+## reading in files with read_tsv
+\end{verbatim}
+
+\begin{verbatim}
+## 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42
+\end{verbatim}
+
+\#\#extract gene and transcript read counts
+
+\hypertarget{take-genes_counts-through-data-pre-processing}{%
+\subsection{take genes\_counts through data
+pre-processing}\label{take-genes_counts-through-data-pre-processing}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{genes_counts <-}\StringTok{ }\NormalTok{txi_gene}\OperatorTok{$}\NormalTok{counts}
+\NormalTok{tx_counts <-}\StringTok{ }\NormalTok{txi_trans}\OperatorTok{$}\NormalTok{counts}
+
+\NormalTok{trans_TPM <-}\StringTok{ }\NormalTok{txi_trans}\OperatorTok{$}\NormalTok{abundance}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-visualization}{%
+\section{Data Visualization}\label{data-visualization}}
+
+\hypertarget{httpsgithub.comwyguothreedrnaseqblobmastervignettesuser_manuals3d_rna-seq_command_line_user_manual.mdde-das-and-dtu-analysis}{%
+\section{\texorpdfstring{\url{https://github.com/wyguo/ThreeDRNAseq/blob/master/vignettes/user_manuals/3D_RNA-seq_command_line_user_manual.md\#de-das-and-dtu-analysis}}{https://github.com/wyguo/ThreeDRNAseq/blob/master/vignettes/user\_manuals/3D\_RNA-seq\_command\_line\_user\_manual.md\#de-das-and-dtu-analysis}}\label{httpsgithub.comwyguothreedrnaseqblobmastervignettesuser_manuals3d_rna-seq_command_line_user_manual.mdde-das-and-dtu-analysis}}
+
+\hypertarget{step-2-filter-low-expression-genes}{%
+\section{Step 2: Filter low expression
+genes}\label{step-2-filter-low-expression-genes}}
+
+\#\#-----\textgreater{}\textgreater{} Do the filters
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{target_high <-}\StringTok{ }\KeywordTok{low.expression.filter}\NormalTok{(}\DataTypeTok{abundance =}\NormalTok{ tx_counts, }
+                                     \DataTypeTok{mapping =}\NormalTok{ tx2gene,}
+                                     \DataTypeTok{abundance.cut =} \DecValTok{1}\NormalTok{,}
+                                     \DataTypeTok{sample.n =} \DecValTok{3}\NormalTok{,}
+                                     \DataTypeTok{unit =} \StringTok{'counts'}\NormalTok{,}
+                                     \DataTypeTok{Log=}\NormalTok{F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Setting row names on a tibble is deprecated.
+\end{verbatim}
+
+Mean-variance plot
+
+\hypertarget{gene-level}{%
+\subsection{-----\textgreater{}\textgreater{} gene
+level}\label{gene-level}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{counts.raw =}\StringTok{ }\NormalTok{genes_counts[}\KeywordTok{rowSums}\NormalTok{(genes_counts}\OperatorTok{>}\DecValTok{0}\NormalTok{)}\OperatorTok{>}\DecValTok{0}\NormalTok{,]}
+
+\NormalTok{counts.filtered =}\StringTok{ }\NormalTok{genes_counts[target_high}\OperatorTok{$}\NormalTok{genes_high,]}
+
+\NormalTok{mv.genes <-}\StringTok{ }\KeywordTok{check.mean.variance}\NormalTok{(}\DataTypeTok{counts.raw =}\NormalTok{ counts.raw,}
+                                \DataTypeTok{counts.filtered =}\NormalTok{ counts.filtered,}
+                                \DataTypeTok{condition =}\NormalTok{ metadata}\OperatorTok{$}\NormalTok{treat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## => Generate DGEList object
+\end{verbatim}
+
+\begin{verbatim}
+## => Fit mean-variance trend
+\end{verbatim}
+
+\begin{verbatim}
+## Done!!!
+\end{verbatim}
+
+\hypertarget{make-plot}{%
+\subsubsection{make plot}\label{make-plot}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit.raw <-}\StringTok{ }\NormalTok{mv.genes}\OperatorTok{$}\NormalTok{fit.raw}
+\NormalTok{fit.filtered <-}\StringTok{ }\NormalTok{mv.genes}\OperatorTok{$}\NormalTok{fit.filtered}
+\NormalTok{mv.genes.plot <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{()\{}
+  \KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+  \KeywordTok{plotMeanVariance}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ fit.raw}\OperatorTok{$}\NormalTok{sx,}\DataTypeTok{y =}\NormalTok{ fit.raw}\OperatorTok{$}\NormalTok{sy,}
+                   \DataTypeTok{l =}\NormalTok{ fit.raw}\OperatorTok{$}\NormalTok{l,}\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{,}\DataTypeTok{fit.line.col =}\StringTok{'gold'}\NormalTok{,}\DataTypeTok{col=}\StringTok{'black'}\NormalTok{)}
+  \KeywordTok{title}\NormalTok{(}\StringTok{'}\CharTok{\textbackslash{}n\textbackslash{}n}\StringTok{Raw counts (gene level)'}\NormalTok{)}
+  \KeywordTok{plotMeanVariance}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ fit.filtered}\OperatorTok{$}\NormalTok{sx,}\DataTypeTok{y =}\NormalTok{ fit.filtered}\OperatorTok{$}\NormalTok{sy,}
+                   \DataTypeTok{l =}\NormalTok{ fit.filtered}\OperatorTok{$}\NormalTok{l,}\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{,}\DataTypeTok{col=}\StringTok{'black'}\NormalTok{)}
+  \KeywordTok{title}\NormalTok{(}\StringTok{'}\CharTok{\textbackslash{}n\textbackslash{}n}\StringTok{Filtered counts (gene level)'}\NormalTok{)}
+  \KeywordTok{lines}\NormalTok{(fit.raw}\OperatorTok{$}\NormalTok{l, }\DataTypeTok{col =} \StringTok{"gold"}\NormalTok{,}\DataTypeTok{lty=}\DecValTok{4}\NormalTok{,}\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
+  \KeywordTok{legend}\NormalTok{(}\StringTok{'topright'}\NormalTok{,}\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{'red'}\NormalTok{,}\StringTok{'gold'}\NormalTok{),}\DataTypeTok{lty=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{4}\NormalTok{),}\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{,}
+         \DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{'low-exp removed'}\NormalTok{,}\StringTok{'low-exp kept'}\NormalTok{))}
+\NormalTok{\}}
+\KeywordTok{mv.genes.plot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+Principal component analysis (PCA)
+
+\#\#-----\textgreater{}\textgreater{} genes level
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data2pca <-}\StringTok{ }\NormalTok{genes_counts[target_high}\OperatorTok{$}\NormalTok{genes_high,]}
+\NormalTok{dge <-}\StringTok{ }\KeywordTok{DGEList}\NormalTok{(}\DataTypeTok{counts=}\NormalTok{data2pca) }
+\NormalTok{dge <-}\StringTok{ }\KeywordTok{calcNormFactors}\NormalTok{(dge)}
+\NormalTok{data2pca <-}\StringTok{ }\KeywordTok{t}\NormalTok{(}\KeywordTok{counts2CPM}\NormalTok{(}\DataTypeTok{obj =}\NormalTok{ dge,}\DataTypeTok{Log =}\NormalTok{ T))}
+\NormalTok{dim1 <-}\StringTok{ 'PC1'}
+\NormalTok{dim2 <-}\StringTok{ 'PC2'}
+\NormalTok{ellipse.type <-}\StringTok{ 'polygon'} \CommentTok{#ellipse.type=c('none','ellipse','polygon')}
+
+\CommentTok{##--All Bio-reps plots}
+
+\NormalTok{groups <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{treat }\CommentTok{## colour on biological replicates}
+\CommentTok{#groups <- metadata$label ## colour on condtions}
+\NormalTok{g <-}\StringTok{ }\KeywordTok{plotPCAind}\NormalTok{(}\DataTypeTok{data2pca =}\NormalTok{ data2pca, }\DataTypeTok{dim1 =}\NormalTok{ dim1, }\DataTypeTok{dim2 =}\NormalTok{ dim2,}
+                \DataTypeTok{groups =}\NormalTok{ groups, }\DataTypeTok{plot.title =} \StringTok{'genescript PCA: bio-reps'}\NormalTok{,}
+                \DataTypeTok{ellipse.type =}\NormalTok{ ellipse.type,}
+                \DataTypeTok{add.label =}\NormalTok{ F, }\DataTypeTok{adj.label =}\NormalTok{ F)}
+
+\NormalTok{g}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\#\#--average Gene expression plot
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{rownames}\NormalTok{(data2pca) <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{'_'}\NormalTok{,}\StringTok{'.'}\NormalTok{,}\KeywordTok{rownames}\NormalTok{(data2pca))}
+\NormalTok{groups <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{label }\CommentTok{## colour on biological replicates}
+\NormalTok{data2pca.ave <-}\StringTok{ }\KeywordTok{rowmean}\NormalTok{(data2pca,metadata}\OperatorTok{$}\NormalTok{treat,}\DataTypeTok{reorder =}\NormalTok{ F)}
+\NormalTok{groups <-}\StringTok{ }\KeywordTok{unique}\NormalTok{(metadata}\OperatorTok{$}\NormalTok{treat)}
+\NormalTok{g <-}\StringTok{ }\KeywordTok{plotPCAind}\NormalTok{(}\DataTypeTok{data2pca =}\NormalTok{ data2pca.ave,}\DataTypeTok{dim1 =} \StringTok{'PC1'}\NormalTok{,}\DataTypeTok{dim2 =} \StringTok{'PC2'}\NormalTok{,}
+                \DataTypeTok{groups =}\NormalTok{ groups,}\DataTypeTok{plot.title =} \StringTok{'genescript PCA: average gene expression'}\NormalTok{,}
+                \DataTypeTok{ellipse.type =} \StringTok{'none'}\NormalTok{,}\DataTypeTok{add.label =}\NormalTok{ T,}\DataTypeTok{adj.label =}\NormalTok{ F)}
+
+\NormalTok{g}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\#\#-----\textgreater{}\textgreater{} trans level
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data2pca <-}\StringTok{ }\NormalTok{tx_counts[target_high}\OperatorTok{$}\NormalTok{trans_high,]}
+\NormalTok{dge <-}\StringTok{ }\KeywordTok{DGEList}\NormalTok{(}\DataTypeTok{counts=}\NormalTok{data2pca) }
+\NormalTok{dge <-}\StringTok{ }\KeywordTok{calcNormFactors}\NormalTok{(dge)}
+\NormalTok{data2pca <-}\StringTok{ }\KeywordTok{t}\NormalTok{(}\KeywordTok{counts2CPM}\NormalTok{(}\DataTypeTok{obj =}\NormalTok{ dge,}\DataTypeTok{Log =}\NormalTok{ T))}
+\NormalTok{dim1 <-}\StringTok{ 'PC1'}
+\NormalTok{dim2 <-}\StringTok{ 'PC2'}
+\NormalTok{ellipse.type <-}\StringTok{ 'polygon'} \CommentTok{#ellipse.type=c('none','ellipse','polygon')}
+
+\CommentTok{##--All Bio-reps plots}
+\NormalTok{groups <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{treat }\CommentTok{## colour on biological replicates}
+\CommentTok{#groups <- metadata$label ## colour on condtions}
+\NormalTok{g <-}\StringTok{ }\KeywordTok{plotPCAind}\NormalTok{(}\DataTypeTok{data2pca =}\NormalTok{ data2pca,}\DataTypeTok{dim1 =}\NormalTok{ dim1,}\DataTypeTok{dim2 =}\NormalTok{ dim2,}
+                \DataTypeTok{groups =}\NormalTok{ groups,}\DataTypeTok{plot.title =} \StringTok{'Transcript PCA: bio-reps'}\NormalTok{,}
+                \DataTypeTok{ellipse.type =}\NormalTok{ ellipse.type,}
+                \DataTypeTok{add.label =}\NormalTok{ T,}\DataTypeTok{adj.label =}\NormalTok{ F)}
+
+\NormalTok{g}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\#\#--average transcript expression plot
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{groups <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{label}
+\NormalTok{data2pca.ave <-}\StringTok{ }\KeywordTok{rowmean}\NormalTok{(data2pca,metadata}\OperatorTok{$}\NormalTok{treat,}\DataTypeTok{reorder =}\NormalTok{ F)}
+\NormalTok{groups <-}\StringTok{ }\KeywordTok{unique}\NormalTok{(metadata}\OperatorTok{$}\NormalTok{treat)}
+\NormalTok{g <-}\StringTok{ }\KeywordTok{plotPCAind}\NormalTok{(}\DataTypeTok{data2pca =}\NormalTok{ data2pca.ave,}\DataTypeTok{dim1 =} \StringTok{'PC1'}\NormalTok{,}\DataTypeTok{dim2 =} \StringTok{'PC2'}\NormalTok{,}
+                \DataTypeTok{groups =}\NormalTok{ groups,}\DataTypeTok{plot.title =} \StringTok{'Transcript PCA: average expression'}\NormalTok{,}
+                \DataTypeTok{ellipse.type =} \StringTok{'none'}\NormalTok{,}\DataTypeTok{add.label =}\NormalTok{ T,}\DataTypeTok{adj.label =}\NormalTok{ F)}
+
+\NormalTok{g}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-14-1.pdf}
+\#\#\# save to figure
+
+Data normalization
+
+\hypertarget{data-normalisation-parameter}{%
+\subsubsection{data normalisation
+parameter}\label{data-normalisation-parameter}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{norm_method <-}\StringTok{ 'TMM'} \CommentTok{## norm_method is one of 'TMM','RLE' and 'upperquartile'}
+\end{Highlighting}
+\end{Shaded}
+
+\#\#-----\textgreater{}\textgreater{} genes level
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dge <-}\StringTok{ }\KeywordTok{DGEList}\NormalTok{(}\DataTypeTok{counts=}\NormalTok{genes_counts[target_high}\OperatorTok{$}\NormalTok{genes_high,],}
+               \DataTypeTok{group =}\NormalTok{ metadata}\OperatorTok{$}\NormalTok{label)}
+\NormalTok{genes_dge <-}\StringTok{ }\KeywordTok{suppressWarnings}\NormalTok{(}\KeywordTok{calcNormFactors}\NormalTok{(dge,}\DataTypeTok{method =}\NormalTok{ norm_method))}
+\KeywordTok{save}\NormalTok{(genes_dge,}\DataTypeTok{file=}\KeywordTok{paste0}\NormalTok{(}\StringTok{'genes_dge.RData'}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\#\#-----\textgreater{}\textgreater{} MDS plot
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{group <-}\StringTok{  }\NormalTok{metadata}\OperatorTok{$}\NormalTok{label}
+
+\NormalTok{y <-}\StringTok{ }\KeywordTok{calcNormFactors}\NormalTok{(dge)}
+\NormalTok{design <-}\StringTok{ }\KeywordTok{model.matrix}\NormalTok{(}\OperatorTok{~}\NormalTok{group)}
+\NormalTok{y <-}\StringTok{ }\KeywordTok{estimateDisp}\NormalTok{(y, design)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in estimateDisp.default(y = y$counts, design = design, group =
+## group, : No residual df: setting dispersion to NA
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+
+\KeywordTok{plotMDS}\NormalTok{(y, }\DataTypeTok{labels=}\OtherTok{NULL}\NormalTok{, }\DataTypeTok{pch=} \DecValTok{19}\NormalTok{, }\DataTypeTok{cex=}\DecValTok{3}\NormalTok{, }\DataTypeTok{cex.axis=}\FloatTok{2.2}\NormalTok{, }\DataTypeTok{cex.lab=} \FloatTok{2.2}\NormalTok{, }\DataTypeTok{cex.main=}\DecValTok{3}\NormalTok{, }\DataTypeTok{col=} \KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"bisque3"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"bisque4"}\NormalTok{, }\DecValTok{2}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#99CCFF"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#3399FF"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#0066CC"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#CCCC00"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#999900"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#666600"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#CC66FF"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#9900CC"}\NormalTok{, }\DecValTok{3}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\StringTok{"#660066"}\NormalTok{, }\DecValTok{3}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\StringTok{"#118833"}\NormalTok{, }\DecValTok{3}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\StringTok{"#118855"}\NormalTok{, }\DecValTok{3}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\StringTok{"#118899"}\NormalTok{, }\DecValTok{3}\NormalTok{)), }\DataTypeTok{main=} \StringTok{"Multidimentional scaling plot"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{text <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'atg2_0h'}\NormalTok{, }\StringTok{'atg2_12h'}\NormalTok{, }\StringTok{'atg2_24h'}\NormalTok{, }\StringTok{'atg5_0h'}\NormalTok{, }\StringTok{'atg5_12h'}\NormalTok{, }\StringTok{'atg5_24h'}\NormalTok{, }\StringTok{'atg7_0h'}\NormalTok{, }\StringTok{'atg7_12h'}\NormalTok{, }\StringTok{'atg7_24h'}\NormalTok{, }\StringTok{'atg9_0h'}\NormalTok{, }\StringTok{'atg9_12h'}\NormalTok{, }\StringTok{'atg9_24h'}\NormalTok{, }\StringTok{'WT_0h'}\NormalTok{, }\StringTok{'WT_12h'}\NormalTok{, }\StringTok{'WT_24h'}\NormalTok{)}
+\KeywordTok{plot.new}\NormalTok{()}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{xpd=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{plot_colors <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{,}\StringTok{"bisque3"}\NormalTok{, }\StringTok{"bisque4"}\NormalTok{, }\StringTok{"#99CCFF"}\NormalTok{, }\StringTok{"#3399FF"}\NormalTok{, }\StringTok{"#0066CC"}\NormalTok{, }\StringTok{"#CCCC00"}\NormalTok{, }\StringTok{"#999900"}\NormalTok{, }\StringTok{"#666600"}\NormalTok{, }\StringTok{"#CC66FF"}\NormalTok{, }\StringTok{"#9900CC"}\NormalTok{, }\StringTok{"#660066"}\NormalTok{, }\StringTok{"#118833"}\NormalTok{, }\StringTok{"#118855"}\NormalTok{, }\StringTok{"#118899"}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"center"}\NormalTok{,}\DataTypeTok{legend =}\NormalTok{ text,}
+       \DataTypeTok{col=}\NormalTok{plot_colors, }\DataTypeTok{cex=}\DecValTok{2}\NormalTok{, }\DataTypeTok{y.intersp =} \FloatTok{0.35}\NormalTok{, }\DataTypeTok{horiz =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{pch=}\DecValTok{19}\NormalTok{, }\DataTypeTok{bty=}\StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-17-2.pdf}
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+\#\#-----\textgreater{}\textgreater{} distribution plot
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample.name <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(metadata}\OperatorTok{$}\NormalTok{label,}\StringTok{'.'}\NormalTok{,metadata}\OperatorTok{$}\NormalTok{treat)}
+\NormalTok{condition <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{label}
+\end{Highlighting}
+\end{Shaded}
+
+\#\#\#--- genes level
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data.before <-}\StringTok{ }\NormalTok{genes_counts[target_high}\OperatorTok{$}\NormalTok{genes_high,]}
+\NormalTok{data.after <-}\StringTok{ }\KeywordTok{counts2CPM}\NormalTok{(}\DataTypeTok{obj =}\NormalTok{ genes_dge,}\DataTypeTok{Log =}\NormalTok{ T)}
+\NormalTok{g <-}\StringTok{ }\KeywordTok{boxplotNormalised}\NormalTok{(}\DataTypeTok{data.before =}\NormalTok{ data.before,}
+                       \DataTypeTok{data.after =}\NormalTok{ data.after,}
+                       \DataTypeTok{condition =}\NormalTok{ condition,}
+                       \DataTypeTok{sample.name =}\NormalTok{ sample.name)}
+\KeywordTok{do.call}\NormalTok{(grid.arrange,g)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\#\#-----\textgreater{}\textgreater{} trans level
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dge <-}\StringTok{ }\KeywordTok{DGEList}\NormalTok{(}\DataTypeTok{counts=}\NormalTok{tx_counts[target_high}\OperatorTok{$}\NormalTok{trans_high,],}
+               \DataTypeTok{group =}\NormalTok{ metadata}\OperatorTok{$}\NormalTok{label,}
+               \DataTypeTok{genes =}\NormalTok{ tx2gene[target_high}\OperatorTok{$}\NormalTok{trans_high,])}
+\NormalTok{trans_dge <-}\StringTok{ }\KeywordTok{suppressWarnings}\NormalTok{(}\KeywordTok{calcNormFactors}\NormalTok{(dge,}\DataTypeTok{method =}\NormalTok{ norm_method))}
+\KeywordTok{save}\NormalTok{(trans_dge,}\DataTypeTok{file=}\KeywordTok{paste0}\NormalTok{(}\StringTok{'trans_dge.RData'}\NormalTok{))}
+
+
+\CommentTok{################################################################################}
+\CommentTok{##----->> distribution plot}
+\NormalTok{sample.name <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(metadata}\OperatorTok{$}\NormalTok{label,}\StringTok{'.'}\NormalTok{,metadata}\OperatorTok{$}\NormalTok{treat)}
+\NormalTok{condition <-}\StringTok{ }\NormalTok{metadata}\OperatorTok{$}\NormalTok{label}
+
+\CommentTok{###--- trans level}
+\NormalTok{data.before <-}\StringTok{ }\NormalTok{tx_counts[target_high}\OperatorTok{$}\NormalTok{trans_high,]}
+\NormalTok{data.after <-}\StringTok{ }\KeywordTok{counts2CPM}\NormalTok{(}\DataTypeTok{obj =}\NormalTok{ trans_dge,}\DataTypeTok{Log =}\NormalTok{ T)}
+\NormalTok{g <-}\StringTok{ }\KeywordTok{boxplotNormalised}\NormalTok{(}\DataTypeTok{data.before =}\NormalTok{ data.before,}
+                       \DataTypeTok{data.after =}\NormalTok{ data.after,}
+                       \DataTypeTok{condition =}\NormalTok{ condition,}
+                       \DataTypeTok{sample.name =}\NormalTok{ sample.name)}
+\KeywordTok{do.call}\NormalTok{(grid.arrange,g)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ANU_UWA_AD_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+
+\end{document}
